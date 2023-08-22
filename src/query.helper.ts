@@ -1,16 +1,19 @@
-export function getQueryParamsFromString (paramString: string) {
-  if (!paramString) {
-    return null
-  }
+function getSeparatorIndex(param: string) {
+  let separatorIndex = param.indexOf('=');
+  return separatorIndex;
+}
 
-  return paramString.split('&').map(
-    (param) => {
-      let separatorIndex = param.indexOf('=')
-      if (separatorIndex == -1) {
-        return {key: param, value: null}
-      } else {
-        return {key: param.substring(0, separatorIndex), value: param.substring(separatorIndex + 1)}
-      }
-    }
-  )
+const isStringEmpty = (str: string) => str.length == 0;
+
+export function getQueryParamsFromString(paramString: string) {
+  return isStringEmpty(paramString)
+    ? null
+    : paramString.split('&').map((param) => {
+        return getSeparatorIndex(param) == -1
+          ? { key: param, value: null }
+          : {
+              key: param.substring(0, getSeparatorIndex(param)),
+              value: param.substring(getSeparatorIndex(param) + 1),
+            };
+      });
 }
